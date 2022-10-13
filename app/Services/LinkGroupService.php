@@ -14,6 +14,11 @@ class LinkGroupService
         $newRow->save();
         return $newRow;
     }
+    
+    public function linkGroupListByAppId($appId, $columnsToReturn){
+        // no pagination needed here
+        return LinkGroup::where('app_id', $appId)->orderBy('id', 'DESC')->get($columnsToReturn);
+    }
 
 
 

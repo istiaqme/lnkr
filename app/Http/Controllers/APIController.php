@@ -78,6 +78,36 @@ class APIController extends Controller
             200);
         }
     }
+    public function linkGroupList(Request $request){
+        try{
+            
+
+            // everything is okay, call the service
+            $list = (new LinkGroupService())->linkGroupListByAppId(APP_ID, ['id', 'title', 'created_at']);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => "List Returned Successfully.",
+                    'data' => [
+                        'pagination' => false,
+                        'count' => count($list),
+                        'items' => $list
+                    ]
+                ], 
+            200);
+
+        }
+        catch(\Exception $e){
+            dd($e);
+            $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => $message,
+                ], 
+            200);
+        }
+    }
 
 
 

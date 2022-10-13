@@ -13,6 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        if(config('app.env') == 'local'){
+            // seeds only in development phase
+            $this->call(TestAppSeeder::class);
+            dd('Development Phase Seeding Done.');
+        }
     }
 }

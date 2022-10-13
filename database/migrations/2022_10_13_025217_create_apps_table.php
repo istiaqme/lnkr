@@ -16,8 +16,9 @@ class CreateAppsTable extends Migration
         Schema::create('apps', function (Blueprint $table) {
             $table->id();
             $table->text('title', 255);
+            $table->text('base_url');
             $table->text('api_key', 255);
-            $table->json('binded_ips');
+            $table->json('binded_ips'); // default is empty array
             $table->boolean('status');
             $table->timestamps();
         });

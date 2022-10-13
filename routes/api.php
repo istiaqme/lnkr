@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\APIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'APIAuthentication'], function(){
+    Route::get('/', [APIController::class, 'index']);
+});
+
+// handle all 404
+Route::fallback(function(){
+    return response()->json(
+        [
+            'status' => 'error',
+            'message' => 'Wrong URL.'
+        ], 
+    404);
 });

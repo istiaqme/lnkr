@@ -18,6 +18,8 @@ Route::group(['middleware' => 'APIAuthentication'], function(){
     Route::get('/', [APIController::class, 'index']);
     Route::post('/link-group/create', [APIController::class, 'linkGroupCreate']);
     Route::get('/link-group/list', [APIController::class, 'linkGroupList']);
+
+    Route::post('/link/create/{linkGroupId}', [APIController::class, 'createLink']);
 });
 
 // handle all 404

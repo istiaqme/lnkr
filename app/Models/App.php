@@ -11,4 +11,8 @@ class App extends Model
     protected $casts = [
         'binded_ips' => 'array'
     ];
+    // as The json datatype can not have default values in MySQL. Use the $attributes instead.
+    protected $attributes = [
+        'binded_ips' => [],
+    ];
 }

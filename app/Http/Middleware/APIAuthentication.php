@@ -43,16 +43,22 @@ class APIAuthentication
             401);
         }
 
+        if(!$app->binded_ips){
+            // ip bind needs not to be checked, add app info to request for future use and return next
+            define('APP_ID', $app->id);
+            return $next($request);
+        }
+
         // check for binded ips
         if(count($app->binded_ips) == 0){
             // ip bind needs not to be checked, add app info to request for future use and return next
-            $request->add(['app_id' => $app->id]);
+            define('APP_ID', $app->id);
             return $next($request);
         }
         
         // as binded ips are in array, check the current ip is in the list or not
         if(in_array($request->ip(), $app->binded_ips)){
-            $request->add(['app_id' => $app->id]);
+            define('APP_ID', $app->id);
             return $next($request);
         }
         else{

@@ -18,7 +18,7 @@ class CreateAppsTable extends Migration
             $table->text('title', 255);
             $table->text('base_url');
             $table->text('api_key', 255);
-            $table->json('binded_ips'); // default is empty array
+            $table->json('binded_ips')->nullable(); 
             $table->boolean('status');
             $table->timestamps();
         });

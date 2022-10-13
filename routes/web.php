@@ -17,4 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/{shortKey}', function () {
+    return view('welcome');
+});
+
 

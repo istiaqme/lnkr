@@ -15,6 +15,7 @@ class CreateLinkVisitQueryLogsTable extends Migration
     {
         Schema::create('link_visit_query_logs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('link_visit_id');
             $table->string('link_short_key');
 
             $table->longText('query');

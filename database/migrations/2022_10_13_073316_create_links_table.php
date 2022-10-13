@@ -23,7 +23,7 @@ class CreateLinksTable extends Migration
             $table->unsignedBigInteger('app_id');   // app table id
             $table->string('ip');
             $table->text('user_agent');
-            $table->boolean('status')->nullable();
+            $table->boolean('status');
             $table->timestamps();
         });
     }

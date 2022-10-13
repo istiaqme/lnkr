@@ -21,5 +21,10 @@ class LinkGroupService
     }
 
 
+    public function createNewLink($appData, $data)
+    {
+        # code...
+    }
+
 
 }

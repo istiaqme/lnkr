@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LinkGroup;
 use App\Services\LinkGroupService;
+use App\Services\LinkService;
 use Illuminate\Http\Request;
 
 class APIController extends Controller
@@ -120,14 +122,14 @@ class APIController extends Controller
 
     public function createLink(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
 
         // check if linkGroupId is send or not
         if(!$request->filled('linkGroupId')){
             return response()->json([
                 'status'=> 'error',
                 'message' => 'Link group is not found'
-            ]);
+            ], 400);
         }
         
         // check title filled 
@@ -148,7 +150,41 @@ class APIController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Title lenght can not be more than 252 characters'
+            ], 400);
+        }
+        
+        // validate redirect_to
+        if(!$request->filled('redirect_to')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Redirect URL can not be empty'
             ]);
         }
+
+        // check link group id is valid or not
+
+        $linkGroup = new LinkGroup();
+        $linkGroup::where('id', $request->linkGroupId)->first();
+        
+        // retrun invalid linkGroup id response
+
+        if(!$linkGroup) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Group not found'
+            ], 400);
+        }
+
+        // if all request valid, create new link 
+
+        $newLink = (new LinkService)->linkCreate($request->linkGroupId, $request->title, $request->redirect_to, APP_ID, [
+            'shortKey' => $request->short_key,
+            'note'  => $request->note
+        ],[
+            'ip' => $request->ip(),
+            'user_agent' => $request->header('user-agent')
+        ]);
     }
 }
+
+

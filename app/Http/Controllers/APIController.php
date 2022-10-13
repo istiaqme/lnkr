@@ -45,14 +45,12 @@ class APIController extends Controller
             }
             // check title string length - max 252
             if(strlen($request->title) > 252){
-                if(!$request->filled('title')){
-                    return response()->json(
-                        [
-                            'status' => 'error',
-                            'message' => "Title is too big. Max limit is 252 characters.",
-                        ], 
-                    400);
-                }
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => "Title is too big. Max limit is 252 characters.",
+                    ], 
+                400);
             }
 
             // now everything is okay, call the service

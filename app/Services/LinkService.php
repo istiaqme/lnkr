@@ -10,17 +10,23 @@ class LinkService
 {
 
 
-    public function linkCreate($linkGroupId, $title, $redirectTo, $appId, $data, $userInfo)
+    public function linkCreate($linkGroupId, $title, $redirect_to, $appId, $data, $clientInfo)
     {
         $newLinkRow = new Link();
-        $newLinkRow->title = $title;
-        $newLinkRow->redirect_to = $redirectTo;
         $newLinkRow->link_group_id = $linkGroupId;
+        $newLinkRow->title = $title;
+        $newLinkRow->redirect_to = $redirect_to;
         $newLinkRow->app_id = $appId;
-        $newLinkRow->ip = $data['ip'];
-        $newLinkRow->user_agent = $data['user_agent'];
+        
         $newLinkRow->short_key = $data['shortKey'];
         $newLinkRow->note = $data['note'];
+
+        $newLinkRow->ip = $clientInfo['ip'];
+        $newLinkRow->user_agent = $clientInfo['user_agent'];
         $newLinkRow->status = true;
+
+        $response = $newLinkRow->save();
+        dd($response);
+
     }
 }

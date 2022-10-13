@@ -197,16 +197,23 @@ class APIController extends Controller
 
             // if all request valid, create new link 
 
-            $newLink = (new LinkService)->linkCreate($request->linkGroupId, $request->title, $request->redirect_to, APP_ID, [
-                'shortKey' => $request->short_key,
-                'note'  => $request->note
-            ], [
-                'ip' => $request->ip(),
-                'user_agent' => $request->header('user-agent')
-            ]);
+            $newLink = (new LinkService)->linkCreate(
+                $request->linkGroupId,
+                $request->title,
+                $request->redirect_to,
+                APP_ID,
+                [
+                    'shortKey' => $request->short_key,
+                    'note'  => $request->note
+                ],
+                [
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->header('user-agent')
+                ]
+            );
 
             // return response
-            
+            return $newLink;
         } catch (\Exception $e) {
             dd($e);
             $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';

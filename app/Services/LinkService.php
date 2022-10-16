@@ -19,7 +19,7 @@ class LinkService
         $newLinkRow->title = trim(ucwords($title));
         $newLinkRow->redirect_to = $redirectTo;
         $newLinkRow->app_id = $appId;
-        
+
         $newLinkRow->short_key = strtolower($optionalParams['shortKey']);
         $newLinkRow->note = $optionalParams['note'];
 
@@ -30,38 +30,37 @@ class LinkService
         $newLinkRow->save();
 
         return $newLinkRow;
-
     }
 
-    
-    public function linkByShortKey($shortKey){
+
+    public function linkByShortKey($shortKey)
+    {
         return Link::where('short_key', $shortKey)->first();
     }
 
-    public function shortKeyExistsInApp($shortKey){
+    public function shortKeyExistsInApp($shortKey)
+    {
         return Link::where('short_key', $shortKey)->first();
     }
 
 
-    public function generateShortKey($length=8){
+    public function generateShortKey($length = 8)
+    {
         $shortKey =  Str::random($length);
         $link = $this->linkByShortKey($shortKey);
-        if($link){
+        if ($link) {
             $this->generateShortKey($length);
-        }else{
-           return $shortKey;
+        } else {
+            return $shortKey;
         }
     }
 
-    public function verifyAppDefinedShortKey($shortKey){
-        if($this->shortKeyExistsInApp($shortKey)){
+    public function verifyAppDefinedShortKey($shortKey)
+    {
+        if ($this->shortKeyExistsInApp($shortKey)) {
             $shortKey = $this->generateShortKey(8);
             return $shortKey;
         }
         return $shortKey;
     }
-
-
-
-
 }

@@ -124,9 +124,8 @@ class APIController extends Controller
     {
         try {
 
-
             // check if linkGroupId is send or not
-            if (!$request->has('linkGroupId')) {
+            if (!$request->linkGroupId) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Link Group is mandatory for this request.'
@@ -135,7 +134,6 @@ class APIController extends Controller
 
             // check link group id is valid or not
             $linkGroupPermission = (new LinkGroupService())->appIdPermissionToLinkGroup($request->linkGroupId, APP_ID);
-
             // retrun invalid linkGroup id response
             if (!$linkGroupPermission) {
                 return response()->json([

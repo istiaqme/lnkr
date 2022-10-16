@@ -9,7 +9,15 @@ use App\Models\Link;
 class LinkService
 {
 
-
+    /**
+     * @param string $linkGroupId 
+     * @param string $title
+     * @param string $redirect_to
+     * @param string $appId
+     * @param array $data
+     * @param array $clientInfo
+     * 
+     */
     public function linkCreate($linkGroupId, $title, $redirect_to, $appId, $data, $clientInfo)
     {
         $newLinkRow = new Link();

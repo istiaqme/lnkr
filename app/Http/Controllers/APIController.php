@@ -124,14 +124,24 @@ class APIController extends Controller
     {
         try {
 
-            // dd($request->all());
 
             // check if linkGroupId is send or not
-            if (!$request->filled('linkGroupId')) {
+            if (!$request->has('linkGroupId')) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Link group is not found'
+                    'message' => 'Link Group is mandatory for this request.'
                 ], 400);
+            }
+
+            // check link group id is valid or not
+            $linkGroupPermission = (new LinkGroupService())->appIdPermissionToLinkGroup($request->linkGroupId, APP_ID);
+
+            // retrun invalid linkGroup id response
+            if (!$linkGroupPermission) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Link Group not found.'
+                ], 401);
             }
 
             // check title filled 
@@ -151,69 +161,66 @@ class APIController extends Controller
             if (strlen($request->title > 252)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Title lenght can not be more than 252 characters'
+                    'message' => 'Title length can not be more than 252 characters.'
                 ], 400);
             }
 
-            // check for short_key
-            if (!$request->filled('short_key')) {
-                return response()->json(
-                    [
-                        'status' => 'error',
-                        'message' => "Short Key is required",
-                    ],
-                    400
-                );
-            }
-
+            
             // validate redirect_to
-            if (!$request->filled('redirect_to')) {
+            if (!$request->filled('redirectTo')) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Redirect URL can not be empty'
-                ]);
+                    'message' => 'Redirect URL can not be empty.'
+                ], 400);
             }
-            //  validate notes
-            if (!$request->filled('note')) {
+            
+            // validate url structure
+            if(!filter_var($request->redirectTo, FILTER_VALIDATE_URL))
+            {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Please a note'
-                ]);
-            }
-
-            // check link group id is valid or not
-
-            $linkGroup = new LinkGroup();
-            $linkGroup::where('id', $request->linkGroupId)->first();
-
-            // retrun invalid linkGroup id response
-
-            if (!$linkGroup) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Group not found'
+                    'message' => 'Redirect URL is not in valid format.'
                 ], 400);
             }
 
+            $shortKey = $request->filled('shortKey') ? (new LinkService())->verifyAppDefinedShortKey($request->shortKey) : (new LinkService())->generateShortKey(6);
+            $note = $request->filled('note') ? $request->note : null;
+
+
+
+            
             // if all request valid, create new link 
 
             $newLink = (new LinkService)->linkCreate(
                 $request->linkGroupId,
                 $request->title,
-                $request->redirect_to,
+                $request->redirectTo,
                 APP_ID,
                 [
-                    'shortKey' => $request->short_key,
-                    'note'  => $request->note
+                    'shortKey' => $shortKey,
+                    'note'  => $note
                 ],
                 [
                     'ip' => $request->ip(),
-                    'user_agent' => $request->header('user-agent')
+                    'userAgent' => $request->header('user-agent')
                 ]
             );
 
             // return response
-            return $newLink;
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Link created succesfully.',
+                'data' => [
+                    'short_key' => $newLink->short_key,
+                    'title' => $newLink->title,
+                    'redirect_to' => $newLink->redirect_to,
+                    'note' => $newLink->note,
+                    'id' => $newLink->id,
+                    'link_group_id' => $newLink->link_group_id
+                ]
+            ], 200);
+
+
         } catch (\Exception $e) {
             dd($e);
             $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';

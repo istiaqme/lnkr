@@ -20,6 +20,24 @@ class LinkGroupService
         return LinkGroup::where('app_id', $appId)->orderBy('id', 'DESC')->get($columnsToReturn);
     }
 
+    public function linkGroupById($id){
+        return LinkGroup::where('id', $id)->first();
+    }
+
+    public function appIdPermissionToLinkGroup($id, $appId){
+        $linkGroup = $this->linkGroupById($id);
+        if(!$linkGroup){
+            return false;
+        }
+
+        if($linkGroup->app_id == $appId){
+            return true;
+        }
+
+        return false;
+
+    }
+
 
     public function createNewLink($appData, $data)
     {

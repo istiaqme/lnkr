@@ -18,6 +18,7 @@ class CreateLinkVisitsTable extends Migration
             $table->string('link_short_key');
             $table->unsignedBigInteger('app_id');   // app table id 
             $table->longText('http_referer');
+            $table->longText('token');
             $table->string('ip');
             $table->text('user_agent');
             $table->timestamps();

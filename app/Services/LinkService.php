@@ -55,6 +55,11 @@ class LinkService
         }
     }
 
+    /**
+     * @param string shortKey - this would be a random string
+     * @return string
+     * 
+     */
     public function verifyAppDefinedShortKey($shortKey)
     {
         if ($this->shortKeyExistsInApp($shortKey)) {

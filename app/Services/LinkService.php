@@ -74,7 +74,7 @@ class LinkService
     public function logAVisit($linkShortKey, $appId, $request){
         $newRow = new LinkVisit();
         $newRow->link_short_key = $linkShortKey;
-        $newRow->token = str_replace('-', '', Str::uuid());
+        $newRow->token = Str::random(6).'_'.str_replace('-', '', Str::uuid()).'_'.Str::random(32);
         $newRow->app_id = $appId;
         $newRow->http_referer = $request->headers->get('referer');
         $newRow->ip = $request->ip();

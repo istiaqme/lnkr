@@ -17,9 +17,10 @@ class CreateLinkVisitQueryLogsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('link_visit_id');
             $table->string('link_short_key');
-
+            $table->unsignedBigInteger('app_id');
             $table->longText('query');
             $table->longText('data')->nullable();
+            $table->longText('http_referer')->nullable();
             $table->string('ip');
             $table->text('user_agent');
             $table->timestamps();

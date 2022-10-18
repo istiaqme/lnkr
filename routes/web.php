@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\APIController;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/{shortKey}', [APIController::class, 'logVisits']);
+Route::get('/{shortKey}', [WebController::class, 'linkVisit']);
 
 

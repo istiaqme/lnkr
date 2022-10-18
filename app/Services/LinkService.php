@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Link;
+use App\Models\LinkVisit;
+use App\Models\LinkVisitQueryLog;
 use Illuminate\Support\Str;
 
 // use App\Models\LinkGroup;
@@ -68,4 +70,34 @@ class LinkService
         }
         return $shortKey;
     }
+
+    public function logAVisit($linkShortKey, $appId, $request){
+        $newRow = new LinkVisit();
+        $newRow->link_short_key = $linkShortKey;
+        $newRow->token = str_replace('-', '', Str::uuid());
+        $newRow->app_id = $appId;
+        $newRow->http_referer = $request->headers->get('referer');
+        $newRow->ip = $request->ip();
+        $newRow->user_agent = $request->headers->get('user-agent');
+        $newRow->save();
+        return $newRow;
+    }
+
+    public function logQueryStringItem($linkVisitId, $linkShortKey, $appId, $query, $value, $request){
+        $newRow = new LinkVisitQueryLog();
+        $newRow->link_visit_id = $linkVisitId;
+        $newRow->link_short_key = $linkShortKey;
+        $newRow->app_id = $appId;
+        $newRow->query = $query;
+        $newRow->data = $value;
+        $newRow->http_referer = $request->headers->get('referer');
+        $newRow->ip = $request->ip();
+        $newRow->user_agent = $request->headers->get('user-agent');
+        $newRow->save();
+        return $newRow;
+    }
+
+
+
+
 }

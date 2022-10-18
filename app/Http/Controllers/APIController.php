@@ -232,40 +232,5 @@ class APIController extends Controller
         }
     }
 
-    // log visits
-    public function logVisits(Request $request)
-    {
-        // get available shortkey in DB
-        $shortKey = Link::where('short_key', $request->shortKey)->first();
-        // dd($shortKey->redirect_to);
-        if(!$shortKey){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid Short Key'
-            ], 404);
-        }
-
-        // verify if short key has any query string
-
-        // process
-        
-        // no query string found
-        $newVisit = new LinkVisit();
-
-        $newVisit->link_short_key = $request->shortKey;
-        $newVisit->app_id = APP_ID;
-        $newVisit->http_referer = $shortKey->redirect_to;
-        $newVisit->token = Str::random(10);;
-        $newVisit->link_short_key = $request->shortKey;
-        $newVisit->ip = $request->ip();
-        $newVisit->user_agent = $request->header('user-agent');
-        $newVisit->save();
-
-        dd($newVisit);
-
-        return response()->json([
-            'status' => 'Success',
-            'message' => 'A visitor found',
-        ],200);
-    }
+    
 }

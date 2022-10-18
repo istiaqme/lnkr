@@ -1,6 +1,7 @@
 <?php 
 namespace App\Services;
 
+use App\Models\Link;
 use App\Models\LinkGroup;
 
 class LinkGroupService
@@ -39,9 +40,17 @@ class LinkGroupService
     }
 
 
-    public function createNewLink($appData, $data)
-    {
-        # code...
+    public function linksByGroupIdAndAppId($linkGroupId, $appId, $as = 'object'){
+        $paginatedRows = Link::where('link_group_id', $linkGroupId)
+                        ->where('app_id', $appId)
+                        ->orderBy('id', 'DESC')
+                        ->paginate(50);
+
+        if($as == 'array'){
+            return $paginatedRows->toArray();
+        }
+
+        return $paginatedRows;
     }
 
 

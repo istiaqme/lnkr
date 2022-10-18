@@ -97,6 +97,21 @@ class LinkService
         return $newRow;
     }
 
+    public function linkVisitsByShortKeyAndAppId($shortKey, $appId, $as = 'object'){
+        $paginatedRows = LinkVisit::where('link_short_key', $shortKey)
+                        ->where('app_id', $appId)
+                        ->orderBy('id', 'DESC')
+                        ->with(['queryParams'])
+                        ->paginate(50);
+
+        if($as == 'array'){
+            return $paginatedRows->toArray();
+        }
+
+        return $paginatedRows;
+
+    }
+
 
 
 

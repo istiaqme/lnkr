@@ -92,7 +92,6 @@ class APIController extends Controller
     {
         try {
 
-
             // everything is okay, call the service
             $list = (new LinkGroupService())->linkGroupListByAppId(APP_ID, ['id', 'title', 'created_at']);
             return response()->json(
@@ -108,7 +107,6 @@ class APIController extends Controller
                 200
             );
         } catch (\Exception $e) {
-            dd($e);
             $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';
             return response()->json(
                 [
@@ -229,6 +227,66 @@ class APIController extends Controller
                 'status' => 'error',
                 'message' => $message,
             ], 500);
+        }
+    }
+
+    public function groupLinks(Request $request)
+    {
+        try {
+            // everything is okay, call the service
+            $list = (new LinkGroupService())->linksByGroupIdAndAppId($request->linkGroupId, APP_ID, 'array');
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => "List Returned Successfully.",
+                    'data' => [
+                        'pagination' => true,
+                        'list' => $list
+                    ]
+                ],
+                200
+            );
+            
+        } catch (\Exception $e) {
+            dd($e);
+            $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => $message,
+                ],
+                200
+            );
+        }
+    }
+
+    public function linkVisits(Request $request)
+    {
+        try {
+            // everything is okay, call the service
+            $list = (new LinkService())->linkVisitsByShortKeyAndAppId($request->shortKey, APP_ID, 'array');
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => "List Returned Successfully.",
+                    'data' => [
+                        'pagination' => true,
+                        'list' => $list
+                    ]
+                ],
+                200
+            );
+            
+        } catch (\Exception $e) {
+            dd($e);
+            $message = config('app.debug') ? $e->getMessage()  : 'System Error: Contact to the service provider.';
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => $message,
+                ],
+                200
+            );
         }
     }
 
